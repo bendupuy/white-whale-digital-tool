@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Life Cycle Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #1c1c1c;
+            background: #fffdf5;
+            padding: 20px;
+        }
+
+        .assessment-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fffdf5;
+            border: 2px solid #aebecb;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(12, 60, 87, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0c3c57 0%, #1172b3 100%);
+            color: #fffdf5;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h2 {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question h3 {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            color: #0c3c57;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .lifecycle-options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .lifecycle-option {
+            padding: 20px;
+            border: 2px solid #aebecb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fffdf5;
+        }
+
+        .lifecycle-option:hover {
+            border-color: #1172b3;
+            background: rgba(17, 114, 179, 0.05);
+        }
+
+        .lifecycle-option.selected {
+            border-color: #1172b3;
+            background: rgba(17, 114, 179, 0.08);
+            box-shadow: 0 2px 8px rgba(17, 114, 179, 0.2);
+        }
+
+        .lifecycle-option h4 {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            color: #0c3c57;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .lifecycle-option p {
+            color: #1c1c1c;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'Garamond', 'Times New Roman', serif;
+            font-weight: 600;
+            color: #0c3c57;
+        }
+
+        input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #aebecb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: #fffdf5;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, select:focus {
+            outline: none;
+            border-color: #1172b3;
+            box-shadow: 0 0 0 3px rgba(17, 114, 179, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #1172b3 0%, #0c3c57 100%);
+            color: #fffdf5;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(143, 224, 196, 0.1);
+            border-radius: 10px;
+        }
+
+        .results-header h3 {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            color: #0c3c57;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .results-header p {
+            color: #1c1c1c;
+            font-size: 1rem;
+        }
+
+        .marketing-mix {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .marketing-p {
+            background: rgba(143, 224, 196, 0.08);
+            border: 1px solid #8fe0c4;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .marketing-p h4 {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            color: #0c3c57;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .marketing-p-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #1172b3, #8fe0c4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 14px;
+            color: #fffdf5;
+        }
+
+        .marketing-p ul {
+            margin-left: 20px;
+            color: #1c1c1c;
+        }
+
+        .marketing-p li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #0c3c57 0%, #1172b3 100%);
+            color: #fffdf5;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .cta-section h4 {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .cta-section p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .assessment-container {
+                margin: 0;
+                border-radius: 0;
+                border: none;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-container">
+        <div class="header">
+            <h2>Market Life Cycle Assessment</h2>
+            <p>Discover targeted marketing strategies for your business stage</p>
+        </div>
+        
+        <div class="content">
+            <!-- Step 1: Life Cycle Stage Selection -->
+            <div class="step active" id="step1">
+                <div class="question">
+                    <h3>Where is your business in the Market Life Cycle?</h3>
+                    <div class="lifecycle-options">
+                        <div class="lifecycle-option" onclick="selectLifecycle('introduction')">
+                            <h4>Introduction</h4>
+                            <p>New product/service launch, building brand awareness, limited market presence, high development costs</p>
+                        </div>
+                        <div class="lifecycle-option" onclick="selectLifecycle('growth')">
+                            <h4>Growth</h4>
+                            <p>Increasing sales and market acceptance, expanding customer base, competitors entering market</p>
+                        </div>
+                        <div class="lifecycle-option" onclick="selectLifecycle('maturity')">
+                            <h4>Maturity</h4>
+                            <p>Market saturation, intense competition, focus on customer retention and differentiation</p>
+                        </div>
+                        <div class="lifecycle-option" onclick="selectLifecycle('decline')">
+                            <h4>Decline</h4>
+                            <p>Decreasing demand, market shrinkage, focus on loyal customers and cost management</p>
+                        </div>
+                    </div>
+                    <button class="btn" id="continueBtn1" onclick="nextStep()" disabled>Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Contact Information -->
+            <div class="step" id="step2">
+                <div class="question">
+                    <h3>Tell us about yourself</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="marketingService">Which marketing service interests you most?</label>
+                        <select id="marketingService" required>
+                            <option value="">Select a service</option>
+                            <option value="brand-audit">Brand Audit & Repositioning</option>
+                            <option value="digital-strategy">Digital Marketing Strategy</option>
+                            <option value="social-analysis">Social Media Analysis</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <button class="btn" onclick="generateResults()">Get My Marketing Strategy</button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results" id="results">
+                <div class="results-header">
+                    <h3 id="resultsTitle"></h3>
+                    <p id="resultsSubtitle"></p>
+                </div>
+                
+                <div class="marketing-mix" id="marketingMix">
+                    <!-- Results will be populated here -->
+                </div>
+                
+                <div class="cta-section">
+                    <h4>Ready to Implement These Strategies?</h4>
+                    <p>Let's discuss how we can help you execute these marketing recommendations for your business.</p>
+                    <p class="final-copy">
+    Ready to dive deeper into your strategy? Email us at <a href="mailto:info@whitewhale.digital">info@whitewhale.digital</a>
+</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedLifecycle = '';
+        const responses = {};
+
+        function selectLifecycle(stage) {
+            selectedLifecycle = stage;
+            
+            // Remove selected class from all options
+            document.querySelectorAll('.lifecycle-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            event.currentTarget.classList.add('selected');
+            
+            // Enable continue button
+            document.getElementById('continueBtn1').disabled = false;
+        }
+
+        function nextStep() {
+            if (!selectedLifecycle) return;
+            
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        }
+
+        function generateResults() {
+            // Validate form
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const service = document.getElementById('marketingService').value;
+            
+            if (!firstName || !lastName || !email || !service) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Store responses
+            responses.firstName = firstName;
+            responses.lastName = lastName;
+            responses.email = email;
+            responses.service = service;
+            responses.lifecycle = selectedLifecycle;
+            
+            // Send lead data to your email
+            sendLeadData();
+            
+            // Generate and show results
+            showResults();
+        }
+
+function sendLeadData() {
+            const serviceNames = {
+                'brand-audit': 'Brand Audit & Repositioning',
+                'digital-strategy': 'Digital Marketing Strategy',
+                'social-analysis': 'Social Media Analysis',
+                'other': 'Other'
+            };
+
+            const submission = {
+                name: responses.firstName + ' ' + responses.lastName,
+                email: responses.email,
+                lifecycle: responses.lifecycle,
+                service: serviceNames[responses.service]
+            };
+
+            fetch("https://formspree.io/f/mpwlqgko", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(submission)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Formspree error:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Submission failed:', error);
+            });
+        }
+            const serviceNames = {
+                'brand-audit': 'Brand Audit & Repositioning',
+                'digital-strategy': 'Digital Marketing Strategy',
+                'social-analysis': 'Social Media Analysis',
+                'other': 'Other'
+            };
+            
+            const emailBody = `New Market Life Cycle Assessment Lead:
+
+Name: ${responses.firstName} ${responses.lastName}
+Email: ${responses.email}
+Business Stage: ${capitalize(responses.lifecycle)}
+Service Interest: ${serviceNames[responses.service]}
+
+Assessment completed at: ${new Date().toLocaleString()}`;
+
+            // Open email client with pre-filled information
+            window.open(`mailto:info@whitewhale.digital?subject=New Lead: Market Life Cycle Assessment&body=${encodeURIComponent(emailBody)}`, '_blank');
+        }
+
+        function showResults() {
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('results').classList.add('active');
+            
+            const strategies = getLifecycleStrategies(selectedLifecycle);
+            
+            document.getElementById('resultsTitle').textContent = `${capitalize(selectedLifecycle)} Stage Marketing Strategy`;
+            document.getElementById('resultsSubtitle').textContent = `Personalized recommendations for ${responses.firstName} ${responses.lastName}`;
+            
+            const marketingMixHTML = `
+                <div class="marketing-p">
+                    <h4><span class="marketing-p-icon">📦</span>Product</h4>
+                    <ul>
+                        ${strategies.product.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="marketing-p">
+                    <h4><span class="marketing-p-icon">💰</span>Price</h4>
+                    <ul>
+                        ${strategies.price.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="marketing-p">
+                    <h4><span class="marketing-p-icon">📍</span>Place</h4>
+                    <ul>
+                        ${strategies.place.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="marketing-p">
+                    <h4><span class="marketing-p-icon">📢</span>Promotion</h4>
+                    <ul>
+                        ${strategies.promotion.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('marketingMix').innerHTML = marketingMixHTML;
+        }
+
+        function getLifecycleStrategies(stage) {
+            const strategies = {
+                introduction: {
+                    product: [
+                        'Design your product to meet innovators\' needs',
+                        'Focus on core functionality and quality',
+                        'Gather feedback from early users for improvements'
+                    ],
+                    price: [
+                        'Consider high pricing (skimming) to convey quality and recoup development costs',
+                        'Appeal to price-insensitive innovators and early adopters',
+                        'Alternatively, use low pricing (penetration) to create entry barriers'
+                    ],
+                    place: [
+                        'Use selective distribution to convey exclusivity',
+                        'Focus on channels that reach innovators',
+                        'Build strategic partnerships with key distributors'
+                    ],
+                    promotion: [
+                        'Build brand awareness with education-focused messaging',
+                        'Maintain patience and consistency in your approach',
+                        'Invest in content that explains your product\'s value'
+                    ]
+                },
+                growth: {
+                    product: [
+                        'Add new features and improve packaging',
+                        'Enhance product quality to appeal to early adopters',
+                        'Develop variations to capture broader market segments'
+                    ],
+                    price: [
+                        'Reduce prices strategically to capture early adopters',
+                        'Balance accessibility with profitability',
+                        'Monitor competitor pricing closely'
+                    ],
+                    place: [
+                        'Expand distribution channels and availability',
+                        'Increase market coverage and accessibility',
+                        'Build relationships with more retailers and partners'
+                    ],
+                    promotion: [
+                        'Shift focus to brand differentiation',
+                        'Emphasize why you\'re better than competitors',
+                        'Increase marketing spend to capture market share'
+                    ]
+                },
+                maturity: {
+                    product: [
+                        'Modify products to emphasize differentiation',
+                        'Add features that distinguish you from competitors',
+                        'Focus on quality improvements and refinements'
+                    ],
+                    price: [
+                        'Meet competitors\' prices strategically',
+                        'Avoid destructive price wars',
+                        'Focus on value rather than just price competition'
+                    ],
+                    place: [
+                        'Implement more intensive distribution strategies',
+                        'Maximize market coverage and convenience',
+                        'Optimize distribution efficiency and costs'
+                    ],
+                    promotion: [
+                        'Retain current clients with loyalty programs',
+                        'Focus on building community around your brand',
+                        'Invest heavily in brand differentiation to stand out'
+                    ]
+                },
+                decline: {
+                    product: [
+                        'Focus on maintaining existing products rather than major innovations',
+                        'Target highly niche customers willing to purchase',
+                        'Streamline product offerings to most profitable items'
+                    ],
+                    price: [
+                        'Consider raising prices to maximize profits from loyal customers',
+                        'Alternatively, cut prices to maintain volume and delay decline',
+                        'Focus on customers with fewer alternatives'
+                    ],
+                    place: [
+                        'Consolidate distribution channels for cost-effectiveness',
+                        'Reduce retail locations and simplify supply chain',
+                        'Consider shifting toward direct sales for better margins'
+                    ],
+                    promotion: [
+                        'Reduce overall promotional spending while becoming more targeted',
+                        'Shift from mass market advertising to direct marketing',
+                        'Focus on your most loyal customer segments'
+                    ]
+                }
+            };
+            
+            return strategies[stage] || strategies.introduction;
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+    </script>
+</body>
+</html>
