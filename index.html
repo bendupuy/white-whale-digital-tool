@@ -291,7 +291,7 @@
                 <div class="question">
                     <h3>Where is your business in the Market Life Cycle?</h3>
                     <div class="lifecycle-options">
-                        <div class="lifecycle-option" onclick="selectLifecycle('introduction')">
+                        <div class="lifecycle-option" onclick="selectLifecycle(event, 'introduction')">
                             <h4>Introduction</h4>
                             <p>New product/service launch, building brand awareness, limited market presence, high development costs</p>
                         </div>
@@ -373,7 +373,7 @@
         let selectedLifecycle = '';
         const responses = {};
 
-        function selectLifecycle(stage) {
+        function selectLifecycle(event, stage) {
             selectedLifecycle = stage;
             
             // Remove selected class from all options
